@@ -1,0 +1,10 @@
+FROM python:3.11
+
+ENV PYTHONDONTWRYTEBYTECODE 1
+ENV PYTHONNUNBUFFERED 1 
+
+WORKDIR /app
+
+
+COPY . /app/
+RUN pip install -r requirements.txt
