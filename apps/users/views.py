@@ -1,34 +1,22 @@
+from django.shortcuts import redirect
 from rest_framework import generics
-from .serializers import RegisterSerializer, LoginSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from .models import CustomUser
-from .services import LoginService
+from rest_framework.permissions import IsAuthenticated
+from .models import Post, Comment
+from .serializers import PostListSerializer, PostCreateDeleteSerializer
 
 
-class RegisterAPIView(generics.CreateAPIView):
-    serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
+class PostListAPIView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostListSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = RegisterSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        CustomUser.create_user(
-            username = serializer.validated_data['username'],
-            password = serializer.validated_data['password']
-        )
 
-        return Response({"status": "User created!"})
-    
+class PostCreateAPIView(generics.CreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostCreateDeleteSerializer
+    permission_classes = (IsAuthenticated,)
 
-class LoginAPIView(generics.CreateAPIView):
-    serializer_class = LoginSerializer
-    permission_classes = [AllowAny]
-    service = LoginService()
 
-    def post(self, request, *args, **kwargs):
-        user = self.service.find_user(request)
-        self.service.check_user(request, user)
-        access, refresh = self.service.give_token(user)
-        return Response({'access_token': str(access), 'refresh_token': str(refresh)})
-    
+class PostDeleteAPIView(generics.DestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostCreateDeleteSerializer
+    permission_classes = (IsAuthenticated,)

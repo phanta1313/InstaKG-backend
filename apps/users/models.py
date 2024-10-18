@@ -1,18 +1,17 @@
 from django.db import models
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from apps.authentication.models import CustomUser
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=16, db_index=True, unique=True)
+class Post(models.Model):
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    text = models.TextField()
+    image = models.ImageField(upload_to="posts/")
+    likes = models.IntegerField(default=0)
 
-    USERNAME_FIELD = 'username'
+    def on_create(self, request):
+        self.owner = request.user
 
-    @classmethod
-    def create_user(ctx, username, password, **extra_fields):
-        if not username:
-            raise ValueError("The given email must be set")
-        user = ctx(username=username, **extra_fields)
-        user.password = make_password(password)
-        user.save()
-        return user
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    text = models.TextField(max_length=255)

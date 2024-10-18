@@ -1,7 +1,10 @@
 from django.urls import path
-from .views import RegisterAPIView, LoginAPIView
+from .views import PostListAPIView, PostCreateAPIView, PostDeleteAPIView
+
 
 urlpatterns = [
-    path('register/', RegisterAPIView.as_view()),
-    path('login/', LoginAPIView.as_view()),
+    path('post/list/', PostListAPIView.as_view()),
+    path('post/create/', PostCreateAPIView.as_view()),
+    path('post/delete/', PostDeleteAPIView.as_view())
+
 ]
