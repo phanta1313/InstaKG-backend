@@ -32,3 +32,10 @@ class LoginAPIView(generics.CreateAPIView):
         access, refresh = self.service.give_token(user)
         return Response({'access_token': str(access), 'refresh_token': str(refresh)})
     
+
+class UserInfoAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        return Response({'username': str(user)})

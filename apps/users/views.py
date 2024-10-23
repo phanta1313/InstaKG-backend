@@ -15,8 +15,14 @@ class PostCreateAPIView(generics.CreateAPIView):
     serializer_class = PostCreateDeleteSerializer
     permission_classes = (IsAuthenticated,)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class PostDeleteAPIView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateDeleteSerializer
     permission_classes = (IsAuthenticated,)
+
+
+
+

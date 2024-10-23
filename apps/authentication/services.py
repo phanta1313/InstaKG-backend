@@ -16,3 +16,4 @@ class LoginService:
         
     def give_token(self, user):
         return AccessToken.for_user(user), RefreshToken.for_user(user)
+
