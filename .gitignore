@@ -7,3 +7,4 @@ keys/
 .venv
 media/
 static/
+actions-runner/
