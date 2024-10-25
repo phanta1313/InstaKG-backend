@@ -1,0 +1,28 @@
+name: build-project-time
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Stop containers
+        run: | 
+            docker-compose stop
+
+      - name: Prune dangling images
+        run: |
+          docker system prune -a
+
+      - name: Run Docker-Compose
+        run: |
+          docker-compose up --build 
+          
